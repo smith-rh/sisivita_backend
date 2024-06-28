@@ -11,7 +11,7 @@ from models.preguntas import Preguntas
 from models.respuesta import Respuestas
 from models.respuesta_usuario import Respuesta_Usuario
 from models.template import Templates
-from models.tests import Tests
+from models.PruebaEvaluacion import Tests
 from models.usuarios import Usuarios
 from schemas.respuesta_schema import respuesta_schema
 from schemas.respuesta_usuario_schema import respuesta_usuario_schema, respuestas_usuario_schema
@@ -23,7 +23,7 @@ from utils.db import db
 test_routes = Blueprint('test_routes', __name__)
 
 
-@test_routes.route('/test', methods=['GET'])
+@test_routes.route('/PruebaEvaluacion', methods=['GET'])
 def get_tests():
     all_usuario = Tests.query.all()
     result = tests_schema.dump(all_usuario)
@@ -36,7 +36,7 @@ def get_tests():
     return make_response(jsonify(data), 200)
 
 
-@test_routes.route('/test/<int:id>', methods=['GET'])
+@test_routes.route('/PruebaEvaluacion/<int:id>', methods=['GET'])
 def get_test(id):
     test = Tests.query.get(id)
     if test is None:
@@ -55,7 +55,7 @@ def get_test(id):
     return make_response(jsonify(data), 200)
 
 
-@test_routes.route('/test/all', methods=['GET'])
+@test_routes.route('/PruebaEvaluacion/all', methods=['GET'])
 def get_all_tests():
     response = []
 
@@ -120,7 +120,7 @@ def get_all_tests():
         return make_response(jsonify({'message': 'No se encontraron datos', 'status': 404}), 200)
 
 
-@test_routes.route('/test/all/<int:id>', methods=['GET'])
+@test_routes.route('/PruebaEvaluacion/all/<int:id>', methods=['GET'])
 def get_all_test(id):
     response = []
 
@@ -185,7 +185,7 @@ def get_all_test(id):
         return make_response(jsonify({'message': 'No se encontraron datos', 'status': 404}), 200)
 
 
-@test_routes.route('/test/responder', methods=['POST'])
+@test_routes.route('/PruebaEvaluacion/responder', methods=['POST'])
 def responder():
     try:
         fecha_fin = request.json.get('fecha_fin')
@@ -245,7 +245,7 @@ def responder():
         return make_response(jsonify({'message': 'Error al guardar respuesta', 'status': 500}), 200)
 
 
-@test_routes.route('/test/mapadecalor', methods=['GET'])
+@test_routes.route('/PruebaEvaluacion/mapadecalor', methods=['GET'])
 def getTestResuelto():
     user_responses = (
         db.session.query(
@@ -299,7 +299,7 @@ def getTestResuelto():
 
     return make_response(jsonify(data), 200)
 
-@test_routes.route('/test/vigilancia',methods=['GET'])
+@test_routes.route('/PruebaEvaluacion/vigilancia',methods=['GET'])
 
 def getVigilancia():
     query = (

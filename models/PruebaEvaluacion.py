@@ -2,7 +2,6 @@ from sqlalchemy import func
 
 from utils.db import db
 
-
 class Tests(db.Model):
     __tablename__ = 'tests'
     

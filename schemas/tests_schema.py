@@ -1,4 +1,4 @@
-from models.tests import Tests
+from models.PruebaEvaluacion import Tests
 from utils.ma import ma
 
 

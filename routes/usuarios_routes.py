@@ -13,14 +13,13 @@ usuarios_routes = Blueprint('usuarios_routes', __name__)
 @usuarios_routes.route('/usuarios', methods=['POST'])
 def create_usuario():
     nombre = request.json.get('nombre')
-    apellido_paterno = request.json.get('apellido_paterno')
-    apellido_materno = request.json.get('apellido_materno')
+    apellidos = request.json.get('apellidos')
     correo_electronico = request.json.get('correo_electronico')
     contrasena = request.json.get('contrasena')
     ubigeo = request.json.get('ubigeo')
 
     # Validar que los datos requeridos estén presentes
-    if not all([nombre, apellido_paterno, correo_electronico, contrasena,ubigeo]):
+    if not all([nombre, apellidos, correo_electronico, contrasena,ubigeo]):
         return make_response(jsonify({'message': 'Datos incompletos', 'status': 400}), 200)
 
     existing_usuario = Usuarios.query.filter_by(correo_electronico=correo_electronico).first()
@@ -36,11 +35,9 @@ def create_usuario():
     # Crear una nueva instancia del modelo Usuarios
     new_usuario = Usuarios(
         nombre=nombre,
-        apellido_paterno=apellido_paterno,
-        apellido_materno=apellido_materno,
+        apellidos=apellidos,
         correo_electronico=correo_electronico,
         contrasena=hashed_contrasena,
-        fecha_registro=datetime.now(),
         ubigeo=ubigeo# Usar la fecha y hora actual con zona horaria
     )
 
@@ -100,14 +97,12 @@ def update_usuario(id):
         }
         return make_response(jsonify(data), 200)
     nombre = request.json.get('nombre')
-    apellido_paterno = request.json.get('apellido_paterno')
-    apellido_materno = request.json.get('apellido_materno')
+    apellidos = request.json.get('apellidos')
     correo_electronico = request.json.get('correo_electronico')
     contrasena = request.json.get('contrasena')
 
     usuario.nombre = nombre
-    usuario.apellido_paterno = apellido_paterno
-    usuario.apellido_materno = apellido_materno
+    usuario.apellidos = apellidos
     usuario.correo_electronico = correo_electronico
 
     if contrasena:

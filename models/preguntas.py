@@ -1,5 +1,5 @@
 from utils.db import db
-from models.tests import Tests
+from models.PruebaEvaluacion import Tests
 
 
 class Preguntas(db.Model):
