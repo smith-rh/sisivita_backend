@@ -25,7 +25,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 db.init_app(app)
 
 app.register_blueprint(usuarios_routes)
-app.register_blueprint(especialistas_routes)
+#app.register_blueprint(especialistas_routes)
 app.register_blueprint(test_routes)
 app.register_blueprint(preguntas_routes)
 app.register_blueprint(opciones_routes)
