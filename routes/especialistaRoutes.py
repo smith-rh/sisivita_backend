@@ -12,15 +12,14 @@ especialistas_routes = Blueprint('especialistas_routes', __name__)
 @especialistas_routes.route('/especialistas', methods=['POST'])
 def create_especialista():
     nombre = request.json.get('nombre')
-    apellido_paterno = request.json.get('apellido_paterno')
-    apellido_materno = request.json.get('apellido_materno')
+    apellidos = request.json.get('apellidos')
     correo_electronico = request.json.get('correo_electronico')
     contrasena = request.json.get('contrasena')
     titulo_id = request.json.get('titulo_id')
     ubigeo = request.json.get('ubigeo')
 
     # Validar que los datos requeridos estén presentes
-    if not all([nombre, apellido_paterno, correo_electronico, contrasena, titulo_id, ubigeo]):
+    if not all([nombre, apellidos, correo_electronico, contrasena, titulo_id, ubigeo]):
         return make_response(jsonify({'message': 'Datos incompletos', 'status': 400}), 200)
 
     existing_usuario = Usuarios.query.filter_by(correo_electronico=correo_electronico).first()
@@ -37,11 +36,9 @@ def create_especialista():
     # Crear una nueva instancia del modelo Especialistas
     new_especialista = Especialistas(
         nombre=nombre,
-        apellido_paterno=apellido_paterno,
-        apellido_materno=apellido_materno,
+        apellido_paterno=apellidos,
         correo_electronico=correo_electronico,
         contrasena=hashed_contrasena,
-        fecha_registro=datetime.now(),  # Usar la fecha y hora actual con zona horaria
         titulo_id=titulo_id,
         ubigeo=ubigeo
     )
@@ -102,17 +99,13 @@ def update_especialista(id):
         }
         return make_response(jsonify(data), 404)
     nombres = request.json.get('nombres')
-    apellido_paterno = request.json.get('apellido_paterno')
-    apellido_materno = request.json.get('apellido_materno')
+    apellidos = request.json.get('apellidos')
     correo_electronico = request.json.get('correo_electronico')
-    fecha_registro = request.json.get('fecha_registro')
     contrasena = request.json.get('contrasena')
     titulo = request.json.get('titulo')
 
     especialista.nombres = nombres
-    especialista.apellido_paterno = apellido_paterno
-    especialista.apellido_materno = apellido_materno
-    especialista.fecha_registro = fecha_registro
+    especialista.apellidos = apellidos
     especialista.contrasena = contrasena
     especialista.titulo = titulo
     especialista.correo_electronico = correo_electronico
