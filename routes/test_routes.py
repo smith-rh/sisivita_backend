@@ -305,8 +305,7 @@ def getVigilancia():
     query = (
         db.session.query(
             Usuarios.nombre,
-            Usuarios.apellido_paterno,
-            Usuarios.apellido_materno,
+            Usuarios.apellidos,
             Respuesta_Usuario.res_user_id,
             Respuesta_Usuario.fecha_fin,
             Respuesta_Usuario.puntuacion,
@@ -332,8 +331,7 @@ def getVigilancia():
     for row in query:
         result = {
             'nombre': row.nombre,
-            'apellido_paterno': row.apellido_paterno,
-            'apellido_materno': row.apellido_materno,
+            'apellidos': row.apellidos,
             'res_user_id': row.res_user_id,
             'fecha_fin': str(row.fecha_fin),
             'puntuacion': row.puntuacion,
