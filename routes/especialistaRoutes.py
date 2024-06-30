@@ -36,7 +36,7 @@ def create_especialista():
     # Crear una nueva instancia del modelo Especialistas
     new_especialista = Especialistas(
         nombre=nombre,
-        apellido_paterno=apellidos,
+        apellidos=apellidos,
         correo_electronico=correo_electronico,
         contrasena=hashed_contrasena,
         titulo_id=titulo_id,
