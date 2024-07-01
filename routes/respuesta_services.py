@@ -3,9 +3,9 @@ from datetime import datetime, date  # Asegúrate de importar date
 from flask import Blueprint, request
 from models.respuesta import Respuestas  # Ajusta la importación según el nombre correcto
 
-respuesta_routes = Blueprint('respuesta_routes', __name__)
+respuesta_services = Blueprint('respuesta_services', __name__)
 
-@respuesta_routes.route('/respuesta', methods=['POST'])
+@respuesta_services.route('/respuesta', methods=['POST'])
 def create_respuesta():
     usuario_id = request.json.get('usuario_id')
     respuesta_id = request.json.get('respuesta_id')
