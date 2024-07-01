@@ -3,8 +3,8 @@ from flask import Blueprint,make_response,jsonify
 from models.opciones import Opciones
 from schemas.opciones_schema import opciones_schema, opcion_schema
 
-opciones_routes = Blueprint('opciones_routes', __name__)
-@opciones_routes.route('/opciones', methods=['GET'])
+opciones_services = Blueprint('opciones_services', __name__)
+@opciones_services.route('/opciones', methods=['GET'])
 def get_opciones():
     opciones = Opciones.query.all()
     result = opciones_schema.dump(opciones)
@@ -15,7 +15,7 @@ def get_opciones():
     }
     return make_response(jsonify(data), 200)
 
-@opciones_routes.route('/opciones/<int:id>', methods=['GET'])
+@opciones_services.route('/opciones/<int:id>', methods=['GET'])
 def get_opcion(id):
     opcion = Opciones.query.get(id)
     if opcion is None:

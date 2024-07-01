@@ -61,7 +61,7 @@ def get_all_tests():
 
     data = (
         db.session.query(
-            Pruebas.test_id.label('test_id'),
+            Pruebas.prueba_id.label('prueba_id'),
             Pruebas.titulo.label('titulo'),
             Pruebas.descripcion.label('test_description'),
             Pruebas.fecha_creacion.label('fecha_creacion'),
@@ -71,7 +71,7 @@ def get_all_tests():
             Opciones.op_pre_id.label('op_pre_id'),
             Opciones_predeterminadas.nombre.label('nombre')
         )
-        .join(Preguntas, Preguntas.test_id == Pruebas.test_id)
+        .join(Preguntas, Preguntas.prueba_id == Pruebas.prueba_id)
         .outerjoin(Opciones, Opciones.pregunta_id == Preguntas.pregunta_id)
         .join(Opciones_predeterminadas, Opciones_predeterminadas.op_pre_id == Opciones.op_pre_id)
         .all()
@@ -80,12 +80,12 @@ def get_all_tests():
     temp_response = {}
 
     for row in data:
-        test_id = row.test_id
+        prueba_id = row.prueba_id
         pregunta_id = row.pregunta_id
 
-        if test_id not in temp_response:
-            temp_response[test_id] = {
-                "test_id": test_id,
+        if prueba_id not in temp_response:
+            temp_response[prueba_id] = {
+                "prueba_id": prueba_id,
                 "titulo": row.titulo,
                 "test_description": row.test_description,
                 "fecha_creacion": str(row.fecha_creacion),
@@ -93,15 +93,15 @@ def get_all_tests():
             }
             print(row.fecha_creacion)
 
-        if pregunta_id not in temp_response[test_id]["preguntas"]:
-            temp_response[test_id]["preguntas"][pregunta_id] = {
+        if pregunta_id not in temp_response[prueba_id]["preguntas"]:
+            temp_response[prueba_id]["preguntas"][pregunta_id] = {
                 "pregunta_id": pregunta_id,
                 "textopregunta": row.textopregunta,
                 "opciones": []
             }
 
         if row.opcion_id:
-            temp_response[test_id]["preguntas"][pregunta_id]["opciones"].append({
+            temp_response[prueba_id]["preguntas"][pregunta_id]["opciones"].append({
                 "opcion_id": row.opcion_id,
                 "op_pre_id": row.op_pre_id,
                 "nombre": row.nombre
@@ -126,7 +126,7 @@ def get_all_test(id):
 
     data = (
         db.session.query(
-            Pruebas.test_id.label('test_id'),
+            Pruebas.prueba_id.label('prueba_id'),
             Pruebas.titulo.label('titulo'),
             Pruebas.descripcion.label('test_description'),
             Pruebas.fecha_creacion.label('fecha_creacion'),
@@ -136,8 +136,8 @@ def get_all_test(id):
             Opciones.op_pre_id.label('op_pre_id'),
             Opciones_predeterminadas.nombre.label('nombre')
         )
-        .where(Pruebas.test_id == id)
-        .join(Preguntas, Preguntas.test_id == Pruebas.test_id)
+        .where(Pruebas.prueba_id == id)
+        .join(Preguntas, Preguntas.prueba_id == Pruebas.prueba_id)
         .outerjoin(Opciones, Opciones.pregunta_id == Preguntas.pregunta_id)
         .join(Opciones_predeterminadas, Opciones_predeterminadas.op_pre_id == Opciones.op_pre_id)
         .all()
@@ -146,27 +146,27 @@ def get_all_test(id):
     temp_response = {}
 
     for row in data:
-        test_id = row.test_id
+        prueba_id = row.prueba_id
         pregunta_id = row.pregunta_id
 
-        if test_id not in temp_response:
-            temp_response[test_id] = {
-                "test_id": test_id,
+        if prueba_id not in temp_response:
+            temp_response[prueba_id] = {
+                "prueba_id": prueba_id,
                 "titulo": row.titulo,
                 "test_description": row.test_description,
                 "fecha_creacion": row.fecha_creacion,
                 "preguntas": {}
             }
 
-        if pregunta_id not in temp_response[test_id]["preguntas"]:
-            temp_response[test_id]["preguntas"][pregunta_id] = {
+        if pregunta_id not in temp_response[prueba_id]["preguntas"]:
+            temp_response[prueba_id]["preguntas"][pregunta_id] = {
                 "pregunta_id": pregunta_id,
                 "textopregunta": row.textopregunta,
                 "opciones": []
             }
 
         if row.opcion_id:
-            temp_response[test_id]["preguntas"][pregunta_id]["opciones"].append({
+            temp_response[prueba_id]["preguntas"][pregunta_id]["opciones"].append({
                 "opcion_id": row.opcion_id,
                 "op_pre_id": row.op_pre_id,
                 "nombre": row.nombre
@@ -220,8 +220,8 @@ def responder():
             Templates.min.label('min'),
         )
                      .where(Preguntas.pregunta_id == pregunta['pregunta_id'])
-                     .where(Preguntas.test_id == Pruebas.test_id)
-                     .where(Pruebas.test_id == Templates.test_id)
+                     .where(Preguntas.prueba_id == Pruebas.prueba_id)
+                     .where(Pruebas.prueba_id == Templates.prueba_id)
                      .all()
                      )
         for row in templates:
@@ -256,14 +256,14 @@ def getTestResuelto():
             Templates.max.label('max'),
             Templates.min.label('min'),
             Templates.template_id.label('template_id'),
-            Templates.test_id.label('test_id')
+            Templates.prueba_id.label('prueba_id')
         )
         .join(Respuesta_Usuario, Usuarios.usuario_id == Respuesta_Usuario.usuario_id)
         .join(Respuestas, Respuestas.res_user_id == Respuesta_Usuario.res_user_id)
         .join(Opciones, Opciones.opcion_id == Respuestas.opcion_id)
         .join(Preguntas, Preguntas.pregunta_id == Opciones.pregunta_id)
-        .join(Pruebas, Pruebas.test_id == Preguntas.test_id)
-        .join(Templates, Templates.test_id == Pruebas.test_id)
+        .join(Pruebas, Pruebas.prueba_id == Preguntas.prueba_id)
+        .join(Templates, Templates.prueba_id == Pruebas.prueba_id)
         .where(and_(
             Templates.min <= Respuesta_Usuario.puntuacion,
             Templates.max >= Respuesta_Usuario.puntuacion
@@ -276,14 +276,14 @@ def getTestResuelto():
             Templates.max,
             Templates.min,
             Templates.template_id,
-            Templates.test_id
+            Templates.prueba_id
         )
         .all()
     )
 
     response =[]
     for row in user_responses:
-        max_value = db.session.query(func.max(Templates.max)).filter_by(test_id=row.test_id).scalar()
+        max_value = db.session.query(func.max(Templates.max)).filter_by(prueba_id=row.prueba_id).scalar()
         response.append ( {
             'puntuacion': row.puntuacion,
             'estado': row.estado,
@@ -309,7 +309,7 @@ def getVigilancia():
             Respuesta_Usuario.res_user_id,
             Respuesta_Usuario.fecha_fin,
             Respuesta_Usuario.puntuacion,
-            Pruebas.test_id,
+            Pruebas.prueba_id,
             Pruebas.titulo,
             Templates.estado,
             Respuesta_Usuario.diagnostico_id,
@@ -320,10 +320,10 @@ def getVigilancia():
         .join(Respuestas, Respuestas.res_user_id == Respuesta_Usuario.res_user_id)
         .join(Opciones, Opciones.opcion_id == Respuestas.opcion_id)
         .join(Preguntas, Preguntas.pregunta_id == Opciones.pregunta_id)
-        .join(Pruebas, Pruebas.test_id == Preguntas.test_id)
+        .join(Pruebas, Pruebas.prueba_id == Preguntas.prueba_id)
         .outerjoin(Diagnostico, Diagnostico.diagnostico_id == Respuesta_Usuario.diagnostico_id)
         .outerjoin(Ansiedad, Ansiedad.ansiedad_id == Diagnostico.ansiedad_id)
-        .join(Templates, Templates.test_id == Pruebas.test_id)
+        .join(Templates, Templates.prueba_id == Pruebas.prueba_id)
         .filter(Respuesta_Usuario.puntuacion.between(Templates.min, Templates.max))
         .all()
     )
@@ -335,7 +335,7 @@ def getVigilancia():
             'res_user_id': row.res_user_id,
             'fecha_fin': str(row.fecha_fin),
             'puntuacion': row.puntuacion,
-            'test_id': row.test_id,
+            'prueba_id': row.prueba_id,
             'titulo': row.titulo,
             'estado': row.estado,
             'diagnostico_id': row.diagnostico_id,

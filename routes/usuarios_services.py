@@ -8,9 +8,9 @@ from schemas.usuarios_schema import usuarios_schema, usuario_schema
 from utils.db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-usuarios_routes = Blueprint('usuarios_routes', __name__)
+usuarios_services = Blueprint('usuarios_services', __name__)
 
-@usuarios_routes.route('/usuarios', methods=['POST'])
+@usuarios_services.route('/usuarios', methods=['POST'])
 def create_usuario():
     nombre = request.json.get('nombre')
     apellidos = request.json.get('apellidos')
@@ -55,7 +55,7 @@ def create_usuario():
         db.session.rollback()
         return make_response(jsonify({'message': 'Error al crear el usuario', 'status': 500}), 200)
 
-@usuarios_routes.route('/usuarios', methods=['GET'])
+@usuarios_services.route('/usuarios', methods=['GET'])
 def get_usuarios():
     all_usuarios = Usuarios.query.all()
     result = usuarios_schema.dump(all_usuarios)
@@ -67,7 +67,7 @@ def get_usuarios():
     return make_response(jsonify(data), 200)
 
 
-@usuarios_routes.route('/usuarios/<int:id>', methods=['GET'])
+@usuarios_services.route('/usuarios/<int:id>', methods=['GET'])
 def get_usuario(id):
     usuario = Usuarios.query.get(id)
     if not usuario:
@@ -87,7 +87,7 @@ def get_usuario(id):
     return make_response(jsonify(data), 200)
 
 
-@usuarios_routes.route('/usuarios/<int:id>', methods=['PUT'])
+@usuarios_services.route('/usuarios/<int:id>', methods=['PUT'])
 def update_usuario(id):
     usuario = Usuarios.query.get(id)
     if not usuario:
@@ -120,7 +120,7 @@ def update_usuario(id):
     return make_response(jsonify(data), 200)
 
 
-@usuarios_routes.route('/usuarios/<int:id>', methods=['DELETE'])
+@usuarios_services.route('/usuarios/<int:id>', methods=['DELETE'])
 def delete_usuario(id):
     usuario = Usuarios.query.get(id)
     if not usuario:
@@ -139,7 +139,7 @@ def delete_usuario(id):
     return make_response(jsonify(data), 200)
 
 
-@usuarios_routes.route('/usuarios/login', methods=['POST'])
+@usuarios_services.route('/usuarios/login', methods=['POST'])
 def login():
     data = request.json
 

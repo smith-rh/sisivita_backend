@@ -5,7 +5,7 @@ from utils.db import db
 class Pruebas(db.Model):
     __tablename__ = 'pruebas'
     
-    test_id = db.Column(db.Integer, primary_key=True)
+    prueba_id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(255), nullable=True)
     descripcion = db.Column(db.Text, nullable=True)
     fecha_creacion = db.Column(db.TIMESTAMP(timezone=True), nullable=True, default=func.now())
