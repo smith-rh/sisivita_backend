@@ -11,22 +11,22 @@ from models.preguntas import Preguntas
 from models.respuesta import Respuestas
 from models.respuesta_usuario import Respuesta_Usuario
 from models.template import Templates
-from models.PruebaEvaluacion import Tests
+from models.pruebas import Pruebas
 from models.usuarios import Usuarios
 from schemas.respuesta_schema import respuesta_schema
 from schemas.respuesta_usuario_schema import respuesta_usuario_schema, respuestas_usuario_schema
 from schemas.template_schema import template_schema, templates_schema, TemplatesSchema
-from schemas.tests_schema import tests_schema, test_schema
+from schemas.pruebas_schema import pruebas_schema, prueba_schema
 from schemas.usuarios_schema import usuarios_schema
 from utils.db import db
 
-test_routes = Blueprint('test_routes', __name__)
+prueba_services = Blueprint('prueba_services', __name__)
 
 
-@test_routes.route('/PruebaEvaluacion', methods=['GET'])
-def get_tests():
-    all_usuario = Tests.query.all()
-    result = tests_schema.dump(all_usuario)
+@prueba_services.route('/pruebas', methods=['GET'])
+def get_Pruebas():
+    all_usuario = Pruebas.query.all()
+    result = pruebas_schema.dump(all_usuario)
     print(result)
     data = {
         'message': 'Todo los test',
@@ -36,16 +36,16 @@ def get_tests():
     return make_response(jsonify(data), 200)
 
 
-@test_routes.route('/PruebaEvaluacion/<int:id>', methods=['GET'])
+@prueba_services.route('/pruebas/<int:id>', methods=['GET'])
 def get_test(id):
-    test = Tests.query.get(id)
+    test = Pruebas.query.get(id)
     if test is None:
         data = {
             'message': 'No existe el test',
             'status': 404
         }
         return make_response(jsonify(data), 200)
-    result = test_schema.dump(test)
+    result = prueba_schema.dump(test)
 
     data = {
         'message': 'Test encontrado',
@@ -55,23 +55,23 @@ def get_test(id):
     return make_response(jsonify(data), 200)
 
 
-@test_routes.route('/PruebaEvaluacion/all', methods=['GET'])
+@prueba_services.route('/pruebas/all', methods=['GET'])
 def get_all_tests():
     response = []
 
     data = (
         db.session.query(
-            Tests.test_id.label('test_id'),
-            Tests.titulo.label('titulo'),
-            Tests.descripcion.label('test_description'),
-            Tests.fecha_creacion.label('fecha_creacion'),
+            Pruebas.test_id.label('test_id'),
+            Pruebas.titulo.label('titulo'),
+            Pruebas.descripcion.label('test_description'),
+            Pruebas.fecha_creacion.label('fecha_creacion'),
             Preguntas.pregunta_id.label('pregunta_id'),
             Preguntas.textopregunta.label('textopregunta'),
             Opciones.opcion_id.label('opcion_id'),
             Opciones.op_pre_id.label('op_pre_id'),
             Opciones_predeterminadas.nombre.label('nombre')
         )
-        .join(Preguntas, Preguntas.test_id == Tests.test_id)
+        .join(Preguntas, Preguntas.test_id == Pruebas.test_id)
         .outerjoin(Opciones, Opciones.pregunta_id == Preguntas.pregunta_id)
         .join(Opciones_predeterminadas, Opciones_predeterminadas.op_pre_id == Opciones.op_pre_id)
         .all()
@@ -120,24 +120,24 @@ def get_all_tests():
         return make_response(jsonify({'message': 'No se encontraron datos', 'status': 404}), 200)
 
 
-@test_routes.route('/PruebaEvaluacion/all/<int:id>', methods=['GET'])
+@prueba_services.route('/pruebas/all/<int:id>', methods=['GET'])
 def get_all_test(id):
     response = []
 
     data = (
         db.session.query(
-            Tests.test_id.label('test_id'),
-            Tests.titulo.label('titulo'),
-            Tests.descripcion.label('test_description'),
-            Tests.fecha_creacion.label('fecha_creacion'),
+            Pruebas.test_id.label('test_id'),
+            Pruebas.titulo.label('titulo'),
+            Pruebas.descripcion.label('test_description'),
+            Pruebas.fecha_creacion.label('fecha_creacion'),
             Preguntas.pregunta_id.label('pregunta_id'),
             Preguntas.textopregunta.label('textopregunta'),
             Opciones.opcion_id.label('opcion_id'),
             Opciones.op_pre_id.label('op_pre_id'),
             Opciones_predeterminadas.nombre.label('nombre')
         )
-        .where(Tests.test_id == id)
-        .join(Preguntas, Preguntas.test_id == Tests.test_id)
+        .where(Pruebas.test_id == id)
+        .join(Preguntas, Preguntas.test_id == Pruebas.test_id)
         .outerjoin(Opciones, Opciones.pregunta_id == Preguntas.pregunta_id)
         .join(Opciones_predeterminadas, Opciones_predeterminadas.op_pre_id == Opciones.op_pre_id)
         .all()
@@ -185,7 +185,7 @@ def get_all_test(id):
         return make_response(jsonify({'message': 'No se encontraron datos', 'status': 404}), 200)
 
 
-@test_routes.route('/PruebaEvaluacion/responder', methods=['POST'])
+@prueba_services.route('/pruebas/responder', methods=['POST'])
 def responder():
     try:
         fecha_fin = request.json.get('fecha_fin')
@@ -220,8 +220,8 @@ def responder():
             Templates.min.label('min'),
         )
                      .where(Preguntas.pregunta_id == pregunta['pregunta_id'])
-                     .where(Preguntas.test_id == Tests.test_id)
-                     .where(Tests.test_id == Templates.test_id)
+                     .where(Preguntas.test_id == Pruebas.test_id)
+                     .where(Pruebas.test_id == Templates.test_id)
                      .all()
                      )
         for row in templates:
@@ -245,7 +245,7 @@ def responder():
         return make_response(jsonify({'message': 'Error al guardar respuesta', 'status': 500}), 200)
 
 
-@test_routes.route('/PruebaEvaluacion/mapadecalor', methods=['GET'])
+@prueba_services.route('/pruebas/mapadecalor', methods=['GET'])
 def getTestResuelto():
     user_responses = (
         db.session.query(
@@ -262,8 +262,8 @@ def getTestResuelto():
         .join(Respuestas, Respuestas.res_user_id == Respuesta_Usuario.res_user_id)
         .join(Opciones, Opciones.opcion_id == Respuestas.opcion_id)
         .join(Preguntas, Preguntas.pregunta_id == Opciones.pregunta_id)
-        .join(Tests, Tests.test_id == Preguntas.test_id)
-        .join(Templates, Templates.test_id == Tests.test_id)
+        .join(Pruebas, Pruebas.test_id == Preguntas.test_id)
+        .join(Templates, Templates.test_id == Pruebas.test_id)
         .where(and_(
             Templates.min <= Respuesta_Usuario.puntuacion,
             Templates.max >= Respuesta_Usuario.puntuacion
@@ -299,7 +299,7 @@ def getTestResuelto():
 
     return make_response(jsonify(data), 200)
 
-@test_routes.route('/PruebaEvaluacion/vigilancia',methods=['GET'])
+@prueba_services.route('/pruebas/vigilancia',methods=['GET'])
 
 def getVigilancia():
     query = (
@@ -309,8 +309,8 @@ def getVigilancia():
             Respuesta_Usuario.res_user_id,
             Respuesta_Usuario.fecha_fin,
             Respuesta_Usuario.puntuacion,
-            Tests.test_id,
-            Tests.titulo,
+            Pruebas.test_id,
+            Pruebas.titulo,
             Templates.estado,
             Respuesta_Usuario.diagnostico_id,
             Diagnostico.ansiedad_id,
@@ -320,10 +320,10 @@ def getVigilancia():
         .join(Respuestas, Respuestas.res_user_id == Respuesta_Usuario.res_user_id)
         .join(Opciones, Opciones.opcion_id == Respuestas.opcion_id)
         .join(Preguntas, Preguntas.pregunta_id == Opciones.pregunta_id)
-        .join(Tests, Tests.test_id == Preguntas.test_id)
+        .join(Pruebas, Pruebas.test_id == Preguntas.test_id)
         .outerjoin(Diagnostico, Diagnostico.diagnostico_id == Respuesta_Usuario.diagnostico_id)
         .outerjoin(Ansiedad, Ansiedad.ansiedad_id == Diagnostico.ansiedad_id)
-        .join(Templates, Templates.test_id == Tests.test_id)
+        .join(Templates, Templates.test_id == Pruebas.test_id)
         .filter(Respuesta_Usuario.puntuacion.between(Templates.min, Templates.max))
         .all()
     )

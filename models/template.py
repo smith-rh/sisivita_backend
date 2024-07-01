@@ -8,7 +8,7 @@ class Templates(db.Model):
     min = db.Column(db.Integer)
     max = db.Column(db.Integer)
     estado = db.Column(db.String(255))
-    test_id = db.Column(db.Integer, db.ForeignKey('tests.test_id'))
+    test_id = db.Column(db.Integer, db.ForeignKey('pruebas.test_id'))
     
     def __init__(self, template_id, min, max):
         self.template_id_id = template_id

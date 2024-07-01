@@ -2,8 +2,8 @@ from sqlalchemy import func
 
 from utils.db import db
 
-class Tests(db.Model):
-    __tablename__ = 'tests'
+class Pruebas(db.Model):
+    __tablename__ = 'pruebas'
     
     test_id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(255), nullable=True)

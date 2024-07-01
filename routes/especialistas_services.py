@@ -6,10 +6,10 @@ from schemas.especialistas_schema import especialistas_schema, especialista_sche
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.db import db
 
-especialistas_routes = Blueprint('especialistas_routes', __name__)
+especialistas_services = Blueprint('especialistas_services', __name__)
 
 
-@especialistas_routes.route('/especialistas', methods=['POST'])
+@especialistas_services.route('/especialistas', methods=['POST'])
 def create_especialista():
     nombre = request.json.get('nombre')
     apellidos = request.json.get('apellidos')
@@ -59,7 +59,7 @@ def create_especialista():
         return make_response(jsonify({'message': 'Error al crear el especialista', 'status': 500}), 200)
 
 
-@especialistas_routes.route('/especialistas', methods=['GET'])
+@especialistas_services.route('/especialistas', methods=['GET'])
 def get_especialistas():
     all_especialistas = Especialistas.query.all()
     result = especialistas_schema.dump(all_especialistas)
@@ -71,7 +71,7 @@ def get_especialistas():
     return make_response(jsonify(data), 200)
 
 
-@especialistas_routes.route('/especialistas/<int:id>', methods=['GET'])
+@especialistas_services.route('/especialistas/<int:id>', methods=['GET'])
 def get_especialista(id):
     especialista = Especialistas.query.get(id)
     if not especialista:
@@ -89,7 +89,7 @@ def get_especialista(id):
     return make_response(jsonify(data), 200)
 
 
-@especialistas_routes.route('/especialistas/<int:id>', methods=['PUT'])
+@especialistas_services.route('/especialistas/<int:id>', methods=['PUT'])
 def update_especialista(id):
     especialista = Especialistas.query.get(id)
     if not especialista:
@@ -122,7 +122,7 @@ def update_especialista(id):
     return make_response(jsonify(data), 200)
 
 
-@especialistas_routes.route('/especialistas/<int:id>', methods=['DELETE'])
+@especialistas_services.route('/especialistas/<int:id>', methods=['DELETE'])
 def delete_especialista(id):
     especialista = Especialistas.query.get(id)
     if not especialista:

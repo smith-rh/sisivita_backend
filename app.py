@@ -2,9 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 
 from routes.opciones_routes import opciones_routes
-from routes.preguntas_routes import preguntas_routes
-from routes.test_routes import test_routes
-from routes.especialistaRoutes import especialistas_routes
+from routes.preguntas_services import preguntas_services
+from routes.prueba_services import prueba_services
+from routes.especialistas_services import especialistas_services
 from routes.titulo_routes import titulo_routes
 from routes.usuarios_routes import usuarios_routes
 from config import DATABASE_CONNECTION_URI
@@ -25,11 +25,11 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 db.init_app(app)
 
 app.register_blueprint(usuarios_routes)
-app.register_blueprint(especialistas_routes)
-app.register_blueprint(test_routes)
-app.register_blueprint(preguntas_routes)
-app.register_blueprint(opciones_routes)
-app.register_blueprint(titulo_routes)
+#app.register_blueprint(especialistas_services)
+#app.register_blueprint(prueba_services)
+#app.register_blueprint(preguntas_services)
+#app.register_blueprint(opciones_routes)
+#app.register_blueprint(titulo_routes)
 
 with app.app_context():
     db.create_all()

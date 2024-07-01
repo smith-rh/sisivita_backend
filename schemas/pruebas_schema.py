@@ -1,10 +1,10 @@
-from models.PruebaEvaluacion import Tests
+from models.pruebas import Pruebas
 from utils.ma import ma
 
 
 class TestSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Tests
+        model = Pruebas
         fields = ('test_id','titulo','descripcion','fecha_creacion', 'template_id')
-test_schema = TestSchema()
-tests_schema = TestSchema(many=True)
+prueba_schema = TestSchema()
+pruebas_schema = TestSchema(many=True)
