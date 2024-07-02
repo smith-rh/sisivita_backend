@@ -1,12 +1,12 @@
 from datetime import datetime
-from flask import Blueprint, request, make_response, jsonify
+from flask import Blueprint, request, make_response, jsonify # type: ignore
 
 from models.especialistas import Especialistas
 from models.usuarios import Usuarios
 from schemas.especialistas_schema import especialista_schema
 from schemas.usuarios_schema import usuarios_schema, usuario_schema
 from utils.db import db
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
 
 usuarios_services = Blueprint('usuarios_services', __name__)
 
@@ -20,7 +20,7 @@ def create_usuario():
 
     # Validar que los datos requeridos estén presentes
     if not all([nombre, apellidos, correo_electronico, contrasena,ubigeo]):
-        return make_response(jsonify({'message': 'Datos incompletos', 'status': 400}), 200)
+        return make_response(jsonify({'message': 'Debe llenar todos los campos requeridos', 'status': 400}), 200)
 
     existing_usuario = Usuarios.query.filter_by(correo_electronico=correo_electronico).first()
     if existing_usuario:
