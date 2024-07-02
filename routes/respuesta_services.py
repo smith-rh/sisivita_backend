@@ -1,6 +1,6 @@
 from datetime import datetime, date  # Asegúrate de importar date
 
-from flask import Blueprint, request
+from flask import Blueprint, request # type: ignore
 from models.respuesta import Respuestas  # Ajusta la importación según el nombre correcto
 
 respuesta_services = Blueprint('respuesta_services', __name__)
