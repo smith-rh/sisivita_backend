@@ -6,7 +6,7 @@ from schemas.especialistas_schema import especialistas_schema, especialista_sche
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.db import db
 
-especialistas_services = Blueprint('especialistas_services', __name__)
+especialistas_services = Blueprint('especialistas_services',  __name__)
 
 
 @especialistas_services.route('/especialistas', methods=['POST'])
@@ -15,11 +15,11 @@ def create_especialista():
     apellidos = request.json.get('apellidos')
     correo_electronico = request.json.get('correo_electronico')
     contrasena = request.json.get('contrasena')
-    titulo_id = request.json.get('titulo_id')
+    colegiatura = request.json.get('colegiatura')
     ubigeo = request.json.get('ubigeo')
 
     # Validar que los datos requeridos estén presentes
-    if not all([nombre, apellidos, correo_electronico, contrasena, titulo_id, ubigeo]):
+    if not all([nombre, apellidos, correo_electronico, contrasena, colegiatura, ubigeo]):
         return make_response(jsonify({'message': 'Datos incompletos', 'status': 400}), 200)
 
     existing_usuario = Usuarios.query.filter_by(correo_electronico=correo_electronico).first()
@@ -39,7 +39,7 @@ def create_especialista():
         apellidos=apellidos,
         correo_electronico=correo_electronico,
         contrasena=hashed_contrasena,
-        titulo_id=titulo_id,
+        colegiatura=colegiatura,
         ubigeo=ubigeo
     )
 
@@ -139,4 +139,3 @@ def delete_especialista(id):
         'status': 200,
     }
     return make_response(jsonify(data), 200)
-
