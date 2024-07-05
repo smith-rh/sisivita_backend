@@ -3,6 +3,7 @@ from flask import Blueprint, request, make_response, jsonify # type: ignore
 
 from models.especialistas import Especialistas
 from models.usuarios import Usuarios
+from models.personas import Personas
 from schemas.especialistas_schema import especialista_schema
 from schemas.usuarios_schema import usuarios_schema, usuario_schema
 from utils.db import db
@@ -41,8 +42,16 @@ def create_usuario():
         ubigeo=ubigeo# Usar la fecha y hora actual con zona horaria
     )
 
+    # Crear una nueva instancia del modelo Personas
+    new_persona = Personas(
+        nombre=nombre,
+        apellidos=apellidos,
+        ubigeo=ubigeo
+    )
+
     try:
         db.session.add(new_usuario)
+        db.session.add(new_persona)
         db.session.commit()
         result = usuario_schema.dump(new_usuario)
         data = {

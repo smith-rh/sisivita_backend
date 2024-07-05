@@ -4,6 +4,7 @@ from flask_cors import CORS
 from routes.opciones_services import opciones_services
 from routes.preguntas_services import preguntas_services
 from routes.prueba_services import prueba_services
+from routes.vigilancia_services import vigilancia_services
 from routes.especialistas_services import especialistas_services
 from routes.titulo_services import titulo_services
 from routes.usuarios_services import usuarios_services
@@ -26,6 +27,7 @@ db.init_app(app)
 
 app.register_blueprint(usuarios_services)
 app.register_blueprint(especialistas_services)
+app.register_blueprint(vigilancia_services)
 app.register_blueprint(prueba_services)
 app.register_blueprint(preguntas_services)
 app.register_blueprint(opciones_services)

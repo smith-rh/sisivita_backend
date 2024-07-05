@@ -1,6 +1,6 @@
 from sqlalchemy import func
 from utils.db import db
-
+from models.ansiedad import Ansiedad
 
 class Diagnostico(db.Model):
     __tablename__ = 'diagnostico'
