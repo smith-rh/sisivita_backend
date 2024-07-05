@@ -10,12 +10,12 @@ from models.opciones_predeterminadas import Opciones_predeterminadas
 from models.preguntas import Preguntas
 from models.respuesta import Respuestas
 from models.respuesta_usuario import Respuesta_Usuario
-from models.template import Templates
+from models.pruebas_template import PruebasTemplates
 from models.pruebas import Pruebas
 from models.usuarios import Usuarios
 from schemas.respuesta_schema import respuesta_schema
 from schemas.respuesta_usuario_schema import respuesta_usuario_schema, respuestas_usuario_schema
-from schemas.template_schema import template_schema, templates_schema, TemplatesSchema
+from schemas.pruebas_template_schema import pruebas_template_schema, pruebas_templates_schema, PruebasTemplatesSchema
 from schemas.pruebas_schema import pruebas_schema, prueba_schema
 from schemas.usuarios_schema import usuarios_schema
 from utils.db import db
@@ -213,21 +213,21 @@ def responder():
         new_respuesta_usuario.puntuacion = puntaje
         db.session.add(new_respuesta_usuario)
 
-        templates = (db.session.query(
-            Templates.template_id.label('template_id'),
-            Templates.estado.label('estado'),
-            Templates.max.label('max'),
-            Templates.min.label('min'),
+        pruebas_templates = (db.session.query(
+            PruebasTemplates.pruebas_template_id.label('pruebas_template_id'),
+            PruebasTemplates.estado.label('estado'),
+            PruebasTemplates.maximo.label('maximo'),
+            PruebasTemplates.minimo.label('minimo'),
         )
                      .where(Preguntas.pregunta_id == pregunta['pregunta_id'])
                      .where(Preguntas.prueba_id == Pruebas.prueba_id)
-                     .where(Pruebas.prueba_id == Templates.prueba_id)
+                     .where(Pruebas.prueba_id == PruebasTemplates.prueba_id)
                      .all()
                      )
-        for row in templates:
-            min = row.min
-            max = row.max
-            if (puntaje <= max and puntaje >= min):
+        for row in pruebas_templates:
+            minimo = row.minimo
+            maximo = row.maximo
+            if (puntaje <= maximo and puntaje >= minimo):
                 semaforo = row.estado
                 break
         data = {
@@ -252,38 +252,38 @@ def getTestResuelto():
             Usuarios.usuario_id.label('usuario_id'),
             Usuarios.ubigeo.label('ubigeo'),
             Respuesta_Usuario.puntuacion.label('puntuacion'),
-            Templates.estado.label('estado'),
-            Templates.max.label('max'),
-            Templates.min.label('min'),
-            Templates.template_id.label('template_id'),
-            Templates.prueba_id.label('prueba_id')
+            PruebasTemplates.estado.label('estado'),
+            PruebasTemplates.maximo.label('maximo'),
+            PruebasTemplates.minimo.label('minimo'),
+            PruebasTemplates.pruebas_template_id.label('pruebas_template_id'),
+            PruebasTemplates.prueba_id.label('prueba_id')
         )
         .join(Respuesta_Usuario, Usuarios.usuario_id == Respuesta_Usuario.usuario_id)
         .join(Respuestas, Respuestas.res_user_id == Respuesta_Usuario.res_user_id)
         .join(Opciones, Opciones.opcion_id == Respuestas.opcion_id)
         .join(Preguntas, Preguntas.pregunta_id == Opciones.pregunta_id)
         .join(Pruebas, Pruebas.prueba_id == Preguntas.prueba_id)
-        .join(Templates, Templates.prueba_id == Pruebas.prueba_id)
+        .join(PruebasTemplates, PruebasTemplates.prueba_id == Pruebas.prueba_id)
         .where(and_(
-            Templates.min <= Respuesta_Usuario.puntuacion,
-            Templates.max >= Respuesta_Usuario.puntuacion
+            PruebasTemplates.minimo <= Respuesta_Usuario.puntuacion,
+            PruebasTemplates.maximo >= Respuesta_Usuario.puntuacion
         ))
         .group_by(
             Usuarios.usuario_id,
             Usuarios.ubigeo,
             Respuesta_Usuario.puntuacion,
-            Templates.estado,
-            Templates.max,
-            Templates.min,
-            Templates.template_id,
-            Templates.prueba_id
+            PruebasTemplates.estado,
+            PruebasTemplates.maximo,
+            PruebasTemplates.minimo,
+            PruebasTemplates.pruebas_template_id,
+            PruebasTemplates.prueba_id
         )
         .all()
     )
 
     response =[]
     for row in user_responses:
-        max_value = db.session.query(func.max(Templates.max)).filter_by(prueba_id=row.prueba_id).scalar()
+        max_value = db.session.query(func.max(PruebasTemplates.maximo)).filter_by(prueba_id=row.prueba_id).scalar()
         response.append ( {
             'puntuacion': row.puntuacion,
             'estado': row.estado,
@@ -311,7 +311,7 @@ def getVigilancia():
             Respuesta_Usuario.puntuacion,
             Pruebas.prueba_id,
             Pruebas.titulo,
-            Templates.estado,
+            PruebasTemplates.estado,
             Respuesta_Usuario.diagnostico_id,
             Diagnostico.ansiedad_id,
             Ansiedad.nivel
@@ -323,8 +323,8 @@ def getVigilancia():
         .join(Pruebas, Pruebas.prueba_id == Preguntas.prueba_id)
         .outerjoin(Diagnostico, Diagnostico.diagnostico_id == Respuesta_Usuario.diagnostico_id)
         .outerjoin(Ansiedad, Ansiedad.ansiedad_id == Diagnostico.ansiedad_id)
-        .join(Templates, Templates.prueba_id == Pruebas.prueba_id)
-        .filter(Respuesta_Usuario.puntuacion.between(Templates.min, Templates.max))
+        .join(PruebasTemplates, PruebasTemplates.prueba_id == Pruebas.prueba_id)
+        .filter(Respuesta_Usuario.puntuacion.between(PruebasTemplates.minimo, PruebasTemplates.maximo))
         .all()
     )
     results = []
