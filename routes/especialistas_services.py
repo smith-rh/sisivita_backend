@@ -102,12 +102,12 @@ def update_especialista(id):
     apellidos = request.json.get('apellidos')
     correo_electronico = request.json.get('correo_electronico')
     contrasena = request.json.get('contrasena')
-    titulo = request.json.get('titulo')
+    colegiatura = request.json.get('colegiatura')
 
     especialista.nombres = nombres
     especialista.apellidos = apellidos
     especialista.contrasena = contrasena
-    especialista.titulo = titulo
+    especialista.colegiatura = colegiatura
     especialista.correo_electronico = correo_electronico
 
     db.session.commit()
